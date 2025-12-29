@@ -25,16 +25,21 @@ function loadUserData(userId) {
 async function initLiff() {
   try {
     console.log('Initializing LIFF with ID:', lineConfig.liffId);
-    await liff.init({ liffId: lineConfig.liffId });
-    if (!liff.isLoggedIn()) {
-      console.log('User not logged in');
+    if (typeof liff !== 'undefined') {
+      await liff.init({ liffId: lineConfig.liffId });
+      if (!liff.isLoggedIn()) {
+        console.log('User not logged in');
+      } else {
+        const profile = await liff.getProfile();
+        loadUserData(profile.userId);
+      }
     } else {
-      const profile = await liff.getProfile();
-      loadUserData(profile.userId);
+      console.log('LIFF SDK not loaded');
     }
   } catch (err) {
     console.error('LIFF initialization failed:', err);
   }
+  // 無論 LIFF 是否初始化成功，都要初始化頁面
   initPage();
 }
 
@@ -69,9 +74,14 @@ async function loadProductDetail(productId) {
 
 async function renderHomePage() {
   const productList = document.getElementById('productList');
-  if (!productList) return;
+  if (!productList) {
+    console.log('productList element not found');
+    return;
+  }
   
+  console.log('Rendering home page...');
   const products = await loadProducts();
+  console.log('Products to render:', products);
   let html = '';
   products.forEach(p => {
     html += `
@@ -85,6 +95,7 @@ async function renderHomePage() {
     `;
   });
   productList.innerHTML = html;
+  console.log('Home page rendered with', products.length, 'products');
 }
 
 async function renderProductPage() {
@@ -170,6 +181,7 @@ window.removeCartItem = function(idx) {
 };
 
 function initPage() {
+  console.log('initPage called');
   const pathname = window.location.pathname;
   console.log('Current page:', pathname);
   
@@ -182,11 +194,11 @@ function initPage() {
   }
 }
 
-// Wait for DOM to be ready
+// 確保 DOM 準備好後才初始化
 if (document.readyState === 'loading') {
+  console.log('DOM loading, waiting for DOMContentLoaded');
   document.addEventListener('DOMContentLoaded', initLiff);
 } else {
+  console.log('DOM already loaded, initializing LIFF');
   initLiff();
 }
-
-
