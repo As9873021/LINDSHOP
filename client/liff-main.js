@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/9/firebase-firestore.js";
-import { firebaseConfig, lineConfig } from "../core/firebase-config.js";
-
+import { firebaseConfig, lineConfig } from "/LINDSHOP/core/firebase-config.js";
 // 1. 初始化
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -56,4 +55,5 @@ function renderSpecs(allSpecs, lastBoughtSpec) {
 
 // 啟動
 initLiff();
+
 loadProducts();
