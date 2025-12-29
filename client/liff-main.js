@@ -1,9 +1,17 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9/firebase-firestore.js";
-import { firebaseConfig, lineConfig } from "../core/firebase-config.js";
+// Firebase 配置直接內嵌
+const firebaseConfig = {
+  apiKey: "AIzaSyD-7mRcOze2du2Jqyy5aRV13lc0a7ys",
+  authDomain: "shop-autopilot-system.firebaseapp.com",
+  projectId: "shop-autopilot-system",
+  storageBucket: "shop-autopilot-system.firebasestorage.app",
+  messagingSenderId: "502644443592",
+  appId: "1:502644443592:web:b50accae4965afc75e58fd"
+};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const lineConfig = {
+  liffId: "2008796603-pGlF9Ep0",
+  channelAccessToken: "wcb3BPCz+RHFnpFLzXSEFy7JQ1Be2FQ3Mc3JNLhdY86/R8vA/N3gqD8i2bZUf0R8k5mm4XU:/ic7VJNg21SXrPMww+1P04FpJAtLYYRa2Z91EX23Hb"
+};
 
 // 測試產品數據
 const MOCK_PRODUCTS = [
@@ -43,32 +51,14 @@ async function initLiff() {
   initPage();
 }
 
-async function loadProducts() {
-  try {
-    console.log('Loading products from Firestore...');
-    const querySnapshot = await getDocs(collection(db, 'products'));
-    const products = [];
-    querySnapshot.forEach((doc) => {
-      products.push({ id: doc.id, ...doc.data() });
-    });
-    console.log('Loaded products:', products.length);
-    return products.length > 0 ? products : MOCK_PRODUCTS;
-  } catch (err) {
-    console.error('Failed to load products from Firebase:', err);
-    return MOCK_PRODUCTS;
-  }
+function loadProducts() {
+  console.log('Loading products...');
+  // 直接返回模擬產品
+  console.log('Products to render:', MOCK_PRODUCTS);
+  return MOCK_PRODUCTS;
 }
 
-async function loadProductDetail(productId) {
-  try {
-    const docRef = doc(db, 'products', productId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
-    }
-  } catch (err) {
-    console.error('Failed to load product detail:', err);
-  }
+function loadProductDetail(productId) {
   return MOCK_PRODUCTS.find(p => p.id === productId);
 }
 
@@ -80,8 +70,8 @@ async function renderHomePage() {
   }
   
   console.log('Rendering home page...');
-  const products = await loadProducts();
-  console.log('Products to render:', products);
+  const products = loadProducts();
+  console.log('Products:', products);
   let html = '';
   products.forEach(p => {
     html += `
@@ -106,7 +96,7 @@ async function renderProductPage() {
     return;
   }
   
-  const product = await loadProductDetail(productId);
+  const product = loadProductDetail(productId);
   if (!product) return;
   
   document.getElementById('mainImg')?.setAttribute('src', product.imageUrl);
@@ -202,4 +192,3 @@ if (document.readyState === 'loading') {
   console.log('DOM already loaded, initializing LIFF');
   initLiff();
 }
-
