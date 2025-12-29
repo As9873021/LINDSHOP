@@ -170,7 +170,7 @@ window.removeCartItem = function(idx) {
   renderCartPage();
 };
 
-function initPage() {
+async function initPage() {
   console.log('initPage called');
   const pathname = window.location.pathname;
   console.log('Current page:', pathname);
@@ -180,7 +180,7 @@ function initPage() {
   } else if (pathname.includes('cart.html')) {
     renderCartPage();
   } else {
-    renderHomePage();
+    await renderHomePage();
   }
 }
 
@@ -192,3 +192,4 @@ if (document.readyState === 'loading') {
   console.log('DOM already loaded, initializing LIFF');
   initLiff();
 }
+
