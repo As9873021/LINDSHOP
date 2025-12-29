@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9/firebase-firestore.js";
-import { firebaseConfig, lineConfig } from "/LINDSHOP/core/firebase-config.js";
+import { firebaseConfig, lineConfig } from "../core/firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -202,3 +202,4 @@ if (document.readyState === 'loading') {
   console.log('DOM already loaded, initializing LIFF');
   initLiff();
 }
+
