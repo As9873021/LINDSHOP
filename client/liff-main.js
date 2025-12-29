@@ -182,4 +182,11 @@ function initPage() {
   }
 }
 
-initLiff();
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLiff);
+} else {
+  initLiff();
+}
+
+
